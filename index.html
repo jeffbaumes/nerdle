@@ -1,0 +1,122 @@
+<html>
+  <style>
+    .container {
+      display: flex;
+      justify-content: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 50px);
+      grid-template-rows: repeat(6, 50px);
+      column-gap: 2px;
+      row-gap: 2px;
+      background-color: black;
+      border: 2px solid black;
+      min-width: none;
+    }
+    .grid div {
+      background-color: white;
+    }
+    .grid div.green {
+      background-color: green;
+    }
+    .grid div.yellow {
+      background-color: yellow;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div id="grid" class="grid">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <script>
+      let cursor = 0;
+      let row = 0;
+      let done = false;
+      let answer = [];
+      for (let i = 0; i < 5; i += 1) {
+        answer.push(`${Math.floor(Math.random() * 10)}`);
+      }
+      const grid = document.getElementById("grid");
+      document.addEventListener("keydown", (ev) => {
+        if (done) {
+          return;
+        }
+        if (ev.key === "Backspace") {
+          cursor -= 1;
+          cursor = Math.max(0, cursor);
+          grid.children[row * 5 + cursor].innerHTML = "";
+        } else if (ev.key === "Enter") {
+          if (cursor === 5) {
+            let correct = true;
+            let remaining = answer.slice();
+            for (let i = 0; i < 5; i += 1) {
+              const cell = grid.children[row * 5 + i];
+              const guess = cell.innerHTML;
+              console.log(`${answer[i]} ${guess}`);
+              if (answer[i] === guess) {
+                cell.className = "green";
+                remaining.splice(remaining.indexOf(guess), 1);
+              } else {
+                correct = false;
+              }
+            }
+            for (let i = 0; i < 5; i += 1) {
+              const cell = grid.children[row * 5 + i];
+              const guess = cell.innerHTML;
+              console.log(`${answer[i]} ${guess}`);
+              if (answer[i] !== guess && remaining.includes(guess)) {
+                cell.className = "yellow";
+                remaining.splice(remaining.indexOf(guess), 1);
+              }
+            }
+            if (correct) {
+              done = true;
+            }
+            row += 1;
+            cursor = 0;
+            if (row === 6) {
+              done = true;
+            }
+          }
+        } else if ("0123456789".includes(ev.key)) {
+          if (cursor < 5) {
+            grid.children[row * 5 + cursor].innerHTML = ev.key;
+          }
+          cursor += 1;
+          cursor = Math.min(5, cursor);
+        }
+      });
+    </script>
+  </body>
+</html>
